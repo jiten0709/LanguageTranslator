@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>t1</title>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"
+    ></script>
+  </head>
+  <body>
+    <textarea id="result" rows="8" cols="80"></textarea> <br />
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+
+    <!-- <script type="module" src="script.js"></script> -->
+
+    <script type="module">
+      // script.js
+      const apiUrl = "https://api.mymemory.translated.net/get";
+
+      async function translateText(text, sourceLanguage, targetLanguage) {
+        try {
+          const response = await axios.get(apiUrl, {
+            params: {
+              q: text,
+              langpair: `${sourceLanguage}|${targetLanguage}`,
+            },
+          });
+
+          const translatedText = response.data.responseData.translatedText;
+          return translatedText;
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            const axiosError = error;
+            console.error("Error translating text: ", axiosError.message);
+          } else {
+            console.error("Unexpected error: ", error);
+          }
+          throw error;
+        }
+      }
+
+      const sourceLanguageCode = "en";
+      const targetLanguageCode = "gu";
+
+      var speechContent = "";
+      var resultElement = document.getElementById("result");
+
+      var recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.lang = window.navigator.language;
+      recognition.interimResults = true;
+
+      recognition.addEventListener("result", (event) => {
+        const result = event.results[event.results.length - 1][0].transcript;
+        resultElement.textContent = result;
+        speechContent = result + " ";
+      });
+
+      var isListening = false;
+      var recognitionTimeout;
+
+      var startButton = document.getElementById("start");
+      var stopButton = document.getElementById("stop");
+
+      startButton.addEventListener("click", () => {
+        if (!isListening) {
+          console.log("start btn clicked");
+          recognition.start();
+          isListening = true;
+        }
+      });
+
+      stopButton.addEventListener("click", () => {
+        console.log("stop btn clicked");
+        recognition.stop();
+        isListening = false;
+
+        translateText(
+          speechContent.trim(),
+          sourceLanguageCode,
+          targetLanguageCode
+        )
+          .then((translatedText) => {
+            console.log(`Original Text: ${speechContent}`);
+            console.log(`Translated Text: ${translatedText}`);
+          })
+          .catch((error) => {
+            console.error("Translation error:", error.message);
+          });
+
+        // Clear the timeout if set
+        clearTimeout(recognitionTimeout);
+      });
+
+      // Optional: Uncomment the following lines if you want to stop recognition after a specific duration
+      /*
+        var recognitionDuration = 60000; // Set the duration in milliseconds (e.g., 60 seconds)
+        recognitionTimeout = setTimeout(() => {
+            recognition.stop();
+            isListening = false;
+            console.log('Recognition stopped after timeout.');
+        }, recognitionDuration);
+        */
+    </script>
+  </body>
+</html>
