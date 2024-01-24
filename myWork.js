@@ -27,12 +27,8 @@ async function translateText(text, sourceLanguage, targetLanguage) {
     }
 }
 
-// Example usage
-// const textToTranslate = 'translated text will be displayed here';
-const sourceLanguageCode = 'en'; // English
+const sourceLanguageCode = 'en';
 const targetLanguageCode = 'gu';
-
-
 
 var speechContent;
 
@@ -85,11 +81,4 @@ recognition.addEventListener('result', (event) => {
     const result = event.results[event.results.length - 1][0].transcript;
     resultElement.textContent = result;
     speechContent = result;
-    // console.log('i listened: ', result)
 });
-
-
-// await SpeechToText()
-
-
-// ----------------- SPEECH TO TEXT ------------------------
