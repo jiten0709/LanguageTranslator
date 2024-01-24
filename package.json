@@ -9,10 +9,12 @@
   "description": "npm install say",
   "version": "1.0.0",
   "main": "myWork.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
 }

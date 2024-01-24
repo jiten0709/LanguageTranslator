@@ -1,110 +1,375 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>t2</title>
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"
-    ></script>
-  </head>
-  <body>
-    <textarea id="result" rows="8" cols="80"></textarea> <br />
-    <button id="start">Start</button>
-    <button id="stop">Stop</button>
+<html>
 
-    <!-- <script type="module" src="script.js"></script> -->
+<head>
+  <meta charset="utf-8" />
+  <title>Voice to Text Converter</title>
+  <link rel="stylesheet" href="myWork.css">
+</head>
 
-    <script type="module">
-        const apiUrl = "https://api.mymemory.translated.net/get";
-    
-        async function translateText(text, sourceLanguage, targetLanguage) {
-            try {
-                const response = await axios.get(apiUrl, {
-                    params: {
-                        q: text,
-                        langpair: `${sourceLanguage}|${targetLanguage}`,
-                    },
-                });
-    
-                const translatedText = response.data.responseData.translatedText;
-                return translatedText;
-            } catch (error) {
-                if (error instanceof Error && error.response && error.response.data) {
-                    const axiosError = error;
-                    console.error("Error translating text: ", axiosError.message);
-                } else {
-                    console.error("Unexpected error: ", error);
-                }
-                throw error;
-            }
+<body>
+  <!-- <textarea id="result" rows="8" cols="80"></textarea> <br /> -->
+  <!-- <button id="start">Start</button> -->
+  <!-- <button id="stop">Stop</button> -->
+
+  <div class="App box-border h-screen w-full ">
+    <div>
+      <nav onclick="{inputddClick('typing'); outputddClick('typing');}"
+        class=" block bg-white shadow-md border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"><a
+            class="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer"><span
+              class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white text">Translator</span></a>
+        </div>
+      </nav>
+    </div>
+    <div
+      class=" my-28 self-center h-2/4 shadow-md flex justify-center items-center justify-items-center rounded-xl border-blue-900 border-2 w-2/3 mx-auto">
+      <div class="w-2/4 h-full flex flex-col justify-start border-r border-r-black   ">
+        <div class="relative flex flex-col">
+          <div class="py-2 mx-2 flex justify-between items-center border-b border-b-slate-400">
+            <div id="inputLanguage" onclick="inputddClick()"
+              class=" m-1 p-0 flex px-2 items-center rounded-md w-fit py-1 hover:bg-slate-200 cursor-pointer text">
+              English<svg height="0.54em" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8"
+                class=" self-center px-2 text-sm text-gray-800 dark:text-black" aria-hidden="true">
+                <path d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1" stroke="currentColor" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2"></path>
+              </svg></div><svg id="interchange" class="cursor-pointer  hover:bg-blue-50 rounded-full p-2" fill="none" height="2.27em"
+              viewBox="0 0 48 48" width="2.27em" xmlns="http://www.w3.org/2000/svg">
+              <path d="m0 0h48v48h-48z" fill="#fff" fill-opacity=".01"></path>
+              <g stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                <path d="m42 19h-36.00002"></path>
+                <path d="m30 7 12 12"></path>
+                <path d="m6.79897 29h36.00003"></path>
+                <path d="m6.79895 29 12.00005 12"></path>
+              </g>
+            </svg>
+          </div>
+
+        </div>
+        <div id="inputDD" class="hidden">
+          <div
+            class='relative flex flex-col  m-1 p-2  rounded-md w-fit  cursor-pointer justify-start items-start border-blue-900 shadow-lg'>
+            <div key={index} onclick="changeInputLanguage('English')" class="hover:bg-slate-200 rounded-md px-1">English
+            </div>
+            <div key={index} onclick="changeInputLanguage('French')" class="hover:bg-slate-200 rounded-md px-1">French
+            </div>
+            <div key={index} onclick="changeInputLanguage('Gujarati')" class="hover:bg-slate-200 rounded-md px-1">
+              Gujarati</div>
+            <div key={index} onclick="changeInputLanguage('Hindi')" class="hover:bg-slate-200 rounded-md px-1">Hindi
+            </div>
+            <div key={index} onclick="changeInputLanguage('Arabic')" class="hover:bg-slate-200 rounded-md px-1">Arabic
+            </div>
+            <div key={index} onclick="changeInputLanguage('Marathi')" class="hover:bg-slate-200 rounded-md px-1">Marathi
+            </div>
+
+          </div>
+        </div>
+
+        <textarea onkeydown="inputEntry(event)" onclick="inputddClick('typing')" id="inputElement"
+          class="relative w-full h-full rounded-xl focus:outline-none px-5 py-2 border-r-1 border-1 border-blue-900 text-lg font-sans font-light hover:font-normal hover:tracking-tight focus:font-normal "
+          placeholder="Type something..."></textarea>
+        <div class="px-2 pb-2 w-full flex justify-end"><a id="stop"><svg
+              class="hidden self-center px-2 text-sm text-gray-800 dark:text-black cursor-pointer" height="2.54em"
+              width="2.54em" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="m400 32h-352c-26.5 0-48 21.5-48 48v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-352c0-26.5-21.5-48-48-48z" />
+            </svg></a><a id="start"><svg class="cursor-pointer  hover:bg-blue-50 rounded-full p-1.5" width="2.27em"
+              height="2.27em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="9" y="2" width="6" height="12" rx="3" stroke="currentColor" stroke-width="1.5"></rect>
+              <path d="M5 10V11C5 14.866 8.13401 18 12 18V18V18C15.866 18 19 14.866 19 11V10" stroke="currentColor"
+                stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 18V22M12 22H9M12 22H15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              </path>
+            </svg></a></div>
+      </div>
+
+
+      <div class="w-2/4  h-full flex flex-col justify-start">
+        <div class="relative flex flex-col justify-start">
+          <div class="mx-2 py-2 h-min border-b border-b-slate-400">
+            <div id="outputLanguage" onclick="outputddClick()"
+              class=" m-1 p-0 flex px-2 items-center rounded-md w-fit py-1   hover:bg-slate-200 cursor-pointer text">
+              Hindi<svg height="0.54em" class=" self-center px-2 text-sm text-gray-800 dark:text-black"
+                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"></path>
+              </svg></div>
+          </div>
+          <div id="outputDD" class="hidden">
+            <div
+              class='relative flex flex-col m-1 p-2  rounded-md w-fit  cursor-pointer justify-start items-start border-blue-900 shadow-lg'>
+              <div key={index} onclick="changeOutputLanguage('English')" class="hover:bg-slate-200 rounded-md px-1">
+                English</div>
+              <div key={index} onclick="changeOutputLanguage('French')" class="hover:bg-slate-200 rounded-md px-1">
+                French</div>
+              <div key={index} onclick="changeOutputLanguage('Gujarati')" class="hover:bg-slate-200 rounded-md px-1">
+                Gujarati</div>
+              <div key={index} onclick="changeOutputLanguage('Hindi')" class="hover:bg-slate-200 rounded-md px-1">Hindi
+              </div>
+              <div key={index} onclick="changeOutputLanguage('Arabic')" class="hover:bg-slate-200 rounded-md px-1">
+                Arabic</div>
+              <div key={index} onclick="changeOutputLanguage('Marathi')" class="hover:bg-slate-200 rounded-md px-1">
+                Marathi</div>
+
+            </div>
+          </div>
+          <div id="resultElement" class="flex pl-5 text-lg py-2 font-extralight text-gray-400 text">[Translated text
+            will
+            be displayed
+            here...]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var inputdd = false;
+    var outputdd = false;
+    var ol = document.getElementById("outputLanguage");
+    var il = document.getElementById("inputLanguage");
+    var iDD = document.getElementById("inputDD");
+    var oDD = document.getElementById("outputDD");
+    var iEl = document.getElementById("inputElement");
+    var input = "";
+
+    // import axios from "axios";
+
+    var sourceLanguageCode = 'en'; // English
+    var targetLanguageCode = 'hi';
+
+    var speechContent;
+
+    var startButton = document.getElementById('start');
+    var stopButton = document.getElementById('stop');
+    var resultElement = document.getElementById('resultElement');
+    var inputElement = document.getElementById('inputElement');
+    var interchangebutton = document.getElementById("interchange");
+
+    interchangebutton.addEventListener("click", interchange);
+
+
+
+    const apiUrl = 'https://api.mymemory.translated.net/get';
+
+
+
+
+
+    var recognition = new webkitSpeechRecognition();
+
+    function langpairFind() {
+
+
+      // console.log("checking");
+      // var il = document.getElementById("inputLanguage").textContent;
+      // var ol = document.getElementById("outputLanguage").textContent;
+      console.log(input + il + ol);
+
+
+      switch (il) {
+        case 'English':
+          sourceLanguageCode = 'en';
+          break;
+        case 'French':
+          sourceLanguageCode = 'fr';
+          break;
+        case 'Gujarati':
+          sourceLanguageCode = 'gu';
+          break;
+        case 'Hindi':
+          sourceLanguageCode = 'hi';
+          break;
+        case 'Marathi':
+          sourceLanguageCode = 'ma';
+          break;
+        case 'Arabic':
+          sourceLanguageCode = 'ar';
+          break;
+
+        default:
+          break;
+      }
+      switch (ol) {
+        case 'English':
+          targetLanguageCode = 'en';
+          break;
+        case 'French':
+          targetLanguageCode = 'fr';
+          break;
+        case 'Gujarati':
+          targetLanguageCode = 'gu';
+          break;
+        case 'Hindi':
+          targetLanguageCode = 'hi';
+          break;
+        case 'Marathi':
+          targetLanguageCode = 'ma';
+          break;
+        case 'Arabic':
+          targetLanguageCode = 'ar';
+          break;
+
+        default:
+          break;
+      }
+
+      console.log(sourceLanguageCode + targetLanguageCode);
+      translateText(input, sourceLanguageCode, targetLanguageCode);
+    }
+
+
+    async function translateText(text, sourceLanguage, targetLanguage) {
+      console.log(text + sourceLanguage + targetLanguage);
+      try {
+        const response = await axios.get(apiUrl, {
+          params: {
+            q: text,
+            langpair: `${sourceLanguage}|${targetLanguage}`,
+          },
+        });
+
+        const translatedText = response.data.responseData.translatedText;
+        resultElement.textContent = translatedText;
+        return translatedText;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const axiosError = error;
+          console.error('Error translating text: ', axiosError.message);
+        } else {
+          console.error('Unexpected error: ', error);
         }
-    
-        const sourceLanguageCode = "en";
-        const targetLanguageCode = "gu";
-    
-        var speechContent = "";
-        var resultElement = document.getElementById("result");
-    
-        var recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;
-        recognition.lang = window.navigator.language;
-        recognition.interimResults = true;
-    
-        recognition.addEventListener("result", async (event) => {
-            const recognizedSpeech = Array.from(event.results)
-                .map((result) => result[0].transcript)
-                .join(" ");
-    
-            resultElement.textContent = recognizedSpeech;
-            speechContent = recognizedSpeech;
-    
-            // Optional: Uncomment the following lines if you want to translate on-the-fly
-            /*
-            try {
-                const translatedText = await translateText(
-                    speechContent.trim(),
-                    sourceLanguageCode,
-                    targetLanguageCode
-                );
-                console.log(`Original Text: ${speechContent}`);
-                console.log(`Translated Text: ${translatedText}`);
-            } catch (error) {
-                console.error("Translation error:", error.message);
-            }
-            */
+        throw error;
+      }
+    }
+
+    // Example usage
+    // const textToTranslate = 'translated text will be displayed here';
+
+
+
+
+
+
+
+    recognition.lang = window.navigator.language;
+    recognition.interimResults = true;
+
+    startButton.addEventListener('click', startSpeech);
+    stopButton.addEventListener('click', stopSpeech)
+
+    function startSpeech() {
+
+
+
+      // alert('MIC IS NOW LISTENING')
+      console.log('start btn clicked')
+      recognition.start();
+      // var classes = startButton.classList;
+      startButton.classList.add('hidden');
+      stopButton.firstChild.classList.remove('hidden');
+      // startButton.innerHTML  = '<svg  class=" self-center px-2 text-sm text-gray-800 dark:text-black cursor-pointer" height="2.54em" width="2.54em" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="m400 32h-352c-26.5 0-48 21.5-48 48v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-352c0-26.5-21.5-48-48-48z"/></svg>';
+      // console.log(startButton.attributes);
+      // startButton.set;
+      // console.log(startButton.id);
+
+
+
+    }
+
+    // function start() {
+    //         console.log('start btn clicked');
+    //         recognition.start(); 
+
+    // }
+
+    function stopSpeech() {
+      console.log('stop btn clicked')
+      recognition.stop();
+      console.log(speechContent);
+
+      translateText(speechContent, sourceLanguageCode, targetLanguageCode)
+        .then((translatedText) => {
+          console.log(`Original Text: ${speechContent}`);
+          console.log(translatedText);
+          resultElement.innerHTML = translatedText;
+        })
+        .catch((error) => {
+          console.error('Translation error:', error.message);
         });
-    
-        var isListening = false;
-    
-        var startButton = document.getElementById("start");
-        var stopButton = document.getElementById("stop");
-    
-        startButton.addEventListener("click", () => {
-            if (!isListening) {
-                console.log("start btn clicked");
-                recognition.start();
-                isListening = true;
-            }
-        });
-    
-        stopButton.addEventListener("click", () => {
-            console.log("stop btn clicked");
-            recognition.stop();
-            isListening = false;
-    
-            // Optional: Translate after stopping recognition
-            translateText(speechContent.trim(), sourceLanguageCode, targetLanguageCode)
-                .then((translatedText) => {
-                    console.log(`Original Text: ${speechContent}`);
-                    console.log(`Translated Text: ${translatedText}`);
-                })
-                .catch((error) => {
-                    console.error("Translation error:", error.message);
-                });
-        });
-    </script>
-    
-    
-  </body>
+
+      startButton.classList.remove('hidden');
+      stopButton.firstChild.classList.add('hidden');
+    }
+
+    // stopButton.addEventListener('click', () => {
+    //     // alert('MIC IS NOW OFF')
+
+    // });
+
+    recognition.addEventListener('result', (event) => {
+      const result = event.results[event.results.length - 1][0].transcript;
+      inputElement.textContent = result;
+      speechContent = result;
+      // console.log('i listened: ', result)
+    });
+
+
+
+    function inputEntry(event) {
+      if (event.key == "Enter") {
+        langpairFind();
+      } else if (event.key == "Backspace") {
+        input = input.substring(0, input.length - 1)
+      } else {
+        console.log(event.key)
+        input = input.concat(event.key);
+      }
+    }
+
+    function inputddClick(click = "ddclick") {
+      if (click == "typing") { iDD.classList.add('hidden'); return; }
+
+      iDD.classList.toggle('hidden');
+    }
+    function outputddClick(click = "ddclick") {
+      if (click == "typing") { oDD.classList.add('hidden'); return; }
+      oDD.classList.toggle('hidden');
+
+
+
+    }
+
+
+
+    // navigator.mediaDevices.getUserMedia()
+
+
+
+    function changeInputLanguage(l) {
+      il.textContent = l;
+      inputddClick('typing');
+    }
+    function changeOutputLanguage(l) {
+      ol.textContent = l;
+
+      outputddClick('typing');
+
+    }
+
+    function interchange() {
+      console.log('check' + il + ol)
+      var temp = ol.textContent;
+      changeOutputLanguage(il.textContent);
+      changeInputLanguage(temp);
+    }
+  </script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+  <script type="module" src="myWork.js">
+
+  </script>
+</body>
+
 </html>
