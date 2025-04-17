@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Language Translator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <div class="App box-border h-screen w-full">
+    <div>
+      <nav class="block bg-white shadow-md border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+          <a class="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer"><span
+              class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white text">Translator</span></a>
+        </div>
+      </nav>
+    </div>
+    <div
+      class="my-28 self-center h-2/4 shadow-md flex justify-center items-center justify-items-center rounded-xl border-blue-900 border-2 w-2/3 mx-auto">
+      <div class="w-2/4 h-full flex flex-col justify-start border-r border-r-black">
+        <div class="relative flex flex-col">
+          <div class="py-2 mx-2 flex justify-between items-center border-b border-b-slate-400">
+            <div id="inputLanguage" onclick="inputddClick()"
+              class="m-1 p-0 flex px-2 items-center rounded-md w-fit py-1 hover:bg-slate-200 cursor-pointer text">
+              English<i class="fa-solid fa-angle-down m-1 p-0 flex px-2 items-center rounded-md w-fit py-1 hover:bg-slate-200 cursor-pointer text"></i>
+            </div>
+            <!-- <i class="fa-solid fa-arrow-right-arrow-left cursor-pointer hover:bg-blue-50 rounded-full p-2"></i> -->
+          </div>
+        </div>
+        <div id="inputDD" class="hidden">
+          <div
+            class="relative flex flex-col m-1 p-2 rounded-md w-fit cursor-pointer justify-start items-start border-blue-900 shadow-lg">
+            <div onclick="changeInputLanguage('English')" class="hover:bg-slate-200 rounded-md px-1">English</div>
+            <div onclick="changeInputLanguage('French')" class="hover:bg-slate-200 rounded-md px-1">French</div>
+            <div onclick="changeInputLanguage('Gujarati')" class="hover:bg-slate-200 rounded-md px-1">Gujarati</div>
+            <div onclick="changeInputLanguage('Hindi')" class="hover:bg-slate-200 rounded-md px-1">Hindi</div>
+            <div onclick="changeInputLanguage('Arabic')" class="hover:bg-slate-200 rounded-md px-1">Arabic</div>
+            <div onclick="changeInputLanguage('Marathi')" class="hover:bg-slate-200 rounded-md px-1">Marathi</div>
+          </div>
+        </div>
+
+        <textarea id="inputEl"
+          class="relative w-full h-full rounded-xl focus:outline-none px-5 py-2 border-r-1 border-1 border-blue-900 text-lg font-sans font-light hover:font-normal hover:tracking-tight focus:font-normal"
+          placeholder="Type something..."></textarea>
+
+        <div class="px-5 pb-2 w-full flex justify-between">
+          <!-- Submit Button -->
+          <button id="submitButton" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            onclick="submitText()">
+            Submit
+          </button>
+
+          <!-- Microphone Button -->
+          <button id="start" class="flex items-center bg-transparent border-none p-2">
+            <i id="micIcon" class="fa-solid fa-microphone-slash text-2xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="w-2/4 h-full flex flex-col justify-start">
+        <div class="relative flex flex-col justify-start">
+          <div class="mx-2 py-2 h-min border-b border-b-slate-400">
+            <div id="outputLanguage" onclick="outputddClick()"
+              class="m-1 p-0 flex px-2 items-center rounded-md w-fit py-1 hover:bg-slate-200 cursor-pointer text">
+              Hindi<i class="fa-solid fa-angle-down m-1 p-0 flex px-2 items-center rounded-md w-fit py-1 hover:bg-slate-200 cursor-pointer text"></i>
+            </div>
+          </div>
+          <div id="outputDD" class="hidden">
+            <div onclick="changeOutputLanguage('English')" class="hover:bg-slate-200 rounded-md px-1">English</div>
+            <div onclick="changeOutputLanguage('French')" class="hover:bg-slate-200 rounded-md px-1">French</div>
+            <div onclick="changeOutputLanguage('Gujarati')" class="hover:bg-slate-200 rounded-md px-1">Gujarati</div>
+            <div onclick="changeOutputLanguage('Hindi')" class="hover:bg-slate-200 rounded-md px-1">Hindi</div>
+            <div onclick="changeOutputLanguage('Arabic')" class="hover:bg-slate-200 rounded-md px-1">Arabic</div>
+            <div onclick="changeOutputLanguage('Marathi')" class="hover:bg-slate-200 rounded-md px-1">Marathi</div>
+          </div>
+          <div id="resultElement" class="flex pl-5 text-lg py-2 font-extralight text-gray-400 text">
+            [Translated text will be displayed here...]
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script>
+    var inputLang = document.getElementById("inputLanguage");
+    var outputLang = document.getElementById("outputLanguage");
+    var inputElement = document.getElementById("inputEl");
+    var outputElement = document.getElementById("resultElement");
+
+    var inputDropDown = document.getElementById("inputDD");
+    var outputDropDown = document.getElementById("outputDD");
+
+    var sourceLanguageCode = "en";
+    var targetLanguageCode = "hi";
+
+    // Function to toggle the input language dropdown
+    function inputddClick() {
+      inputDropDown.classList.toggle("hidden");
+    }
+
+    // Function to toggle the output language dropdown
+    function outputddClick() {
+      outputDropDown.classList.toggle("hidden");
+    }
+
+    // Function to handle language selection
+    function changeInputLanguage(language) {
+      inputLang.textContent = language;
+      sourceLanguageCode = getLanguageCode(language);
+      inputddClick(); // Close dropdown after selection
+    }
+
+    function changeOutputLanguage(language) {
+      outputLang.textContent = language;
+      targetLanguageCode = getLanguageCode(language);
+      outputddClick(); // Close dropdown after selection
+    }
+
+    // Function to map language names to codes
+    function getLanguageCode(language) {
+      const languageMap = {
+        English: "en",
+        French: "fr",
+        Gujarati: "gu",
+        Hindi: "hi",
+        Arabic: "ar",
+        Marathi: "mr",
+      };
+      return languageMap[language] || "en";
+    }
+
+    // Function to handle translation
+    async function translateText(text, sourceLang, targetLang) {
+      try {
+        const response = await axios.post("http://localhost:8080/translate", {
+          text: text,
+          sourceLanguage: sourceLang,
+          targetLanguage: targetLang,
+        });
+        const translatedText = response.data.translatedText;
+        outputElement.textContent = translatedText;
+      } catch (error) {
+        console.error("Error translating text:", error.message);
+        outputElement.textContent = "Error: Unable to translate text.";
+      }
+    }
+
+    // Function to handle the submit button click
+    function submitText() {
+      const text = inputElement.value.trim();
+      if (text) {
+        translateText(text, sourceLanguageCode, targetLanguageCode);
+      } else {
+        console.error("Input text is empty.");
+        outputElement.textContent = "Please enter text to translate.";
+      }
+    }
+
+    // Speech Recognition Integration
+    var speechContent = "";
+    var recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.lang = window.navigator.language;
+    recognition.interimResults = true;
+
+    recognition.addEventListener("result", async (event) => {
+      const recognizedSpeech = Array.from(event.results)
+        .map((result) => result[0].transcript)
+        .join(" ");
+
+      inputElement.value = recognizedSpeech;
+      speechContent = recognizedSpeech;
+
+      // Optional: Translate on-the-fly
+      try {
+        const translatedText = await translateText(
+          speechContent.trim(),
+          sourceLanguageCode,
+          targetLanguageCode
+        );
+        console.log(`Original Text: ${speechContent}`);
+        console.log(`Translated Text: ${translatedText}`);
+      } catch (error) {
+        console.error("Translation error:", error.message);
+      }
+    });
+
+    var isListening = false;
+    var startButton = document.getElementById("start");
+
+    startButton.addEventListener("click", () => {
+      if (!isListening) {
+        console.log("Microphone started listening...");
+        recognition.start();
+        isListening = true;
+        startButton.innerHTML = '<i class="fa-solid fa-microphone text-2xl"></i>';
+      } else {
+        console.log("Microphone stopped listening...");
+        recognition.stop();
+        isListening = false;
+        startButton.innerHTML = '<i class="fa-solid fa-microphone-slash text-2xl"></i>';
+      }
+    });
+  </script>
+
+</body>
+
+</html>
