@@ -1,49 +1,80 @@
-# Language Translator
+# LinguaFlow - Language Translator
 
-A web-based application that allows users to translate text between multiple languages. The application supports both text input and speech recognition for translation.
+LinguaFlow is a simple yet powerful web-based application that allows users to translate text between multiple languages in real-time. It supports both typed text input and speech-to-text for a seamless translation experience.
 
-## Features
+## ✨ Features
 
-- **Text Translation**: Translate text between supported languages.
-- **Speech Recognition**: Use your microphone to input text via speech and translate it.
-- **Dynamic Language Selection**: Choose source and target languages dynamically.
-- **Real-Time Translation**: Translate text or speech input in real-time.
+- **Text Translation**: Instantly translate text between a wide variety of supported languages.
+- **Speech Recognition**: Use your microphone to speak and have your words automatically transcribed and translated.
+- **Dynamic Language Selection**: Easily select and swap source and target languages from dropdown menus.
+- **Copy & Speak**: One-click buttons to copy the translated text to your clipboard or listen to it being spoken.
+- **Real-Time**: Get translations as you type or speak.
 
-## Technologies Used
+## 🛠️ Technologies Used
 
 - **Frontend**:
-  - HTML, CSS, JavaScript
+  - HTML5
+  - CSS3
+  - JavaScript (ES6+)
   - [Font Awesome](https://fontawesome.com/) for icons
-  - [Axios](https://axios-http.com/) for API requests
 - **Backend**:
   - Node.js with Express.js
-  - [MyMemory Translation API](https://mymemory.translated.net/) for translation
-- **Speech Recognition**:
-  - `webkitSpeechRecognition` for capturing speech input
+- **API**:
+  - [MyMemory Translation API](https://mymemory.translated.net/) for translation services.
+  - Web Speech API (`webkitSpeechRecognition`) for voice input.
 
-## Installation
+## 🚀 Getting Started
+
+Follow these instructions to get a local copy up and running.
 
 ### Prerequisites
-- Node.js installed on your system
-- A modern web browser (e.g., Chrome)
 
-### Steps
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd languageTranslator
-   ```
+- [Node.js](https://nodejs.org/) installed on your system.
+- A modern web browser that supports the Web Speech API (e.g., Google Chrome).
 
-2. Install backend dependencies and start the server:
-```
-cd backend
-npm install
-node api.js
-```
+### Installation & Setup
 
-3. Install frontend dependencies and start the server:
-```
-cd ../frontend
-npm install
-npm start
-```
+1.  **Clone the repository:**
+
+    ```sh
+    git clone https://github.com/jiten0709/LanguageTranslator.git
+    cd LanguageTranslator
+    ```
+
+2.  **Create a env file in backend dir**
+
+    ```sh
+    cp .env.example .env
+    ```
+
+3.  **Update the config.js file in frontend/public dir accordingly**
+
+4.  **Set up and run the backend server:**
+    Open a terminal window and run:
+
+    ```sh
+    cd backend
+    npm install
+    node api.js
+    ```
+
+    The backend server will start, typically on `http://localhost:8080`.
+
+5.  **Set up and run the frontend:**
+    Open a **new** terminal window and run:
+    ```sh
+    cd frontend
+    npm install
+    npm start
+    ```
+    This will usually open the application automatically in your default web browser at `http://localhost:3000`.
+
+## Usage
+
+1.  Open the application in your web browser.
+2.  Select the source language (the language you are translating from).
+3.  Select the target language (the language you want to translate to).
+4.  **For text input**: Type your text into the left-hand text area. The translation will appear on the right.
+5.  **For speech input**: Click the microphone icon, grant microphone permissions if prompted, and start speaking. Your speech will be converted to text and translated.
+
+## Built with ❤️ by Jiten!

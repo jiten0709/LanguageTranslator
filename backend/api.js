@@ -5,7 +5,7 @@ import 'dotenv/config'
 import https from 'https';
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.BACKEND_PORT || 8080;
 
 // Middleware
 app.use(express.json());
